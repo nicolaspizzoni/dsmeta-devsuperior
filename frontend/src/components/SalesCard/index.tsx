@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
     Container,
     TextInputContainer,
-    Date,
+    DateSelector,
     SalesTable,
     ShowHead,
     ShowColumn,
@@ -11,22 +11,23 @@ import {
 import { NotificationButton } from "../NotificationButton";
 
 export function SalesCard() {
-    const [dataDe, setDataDe] = useState<Date>()
-    const [dataAte, setDataAte] = useState<Date>()
+    const minDate = new Date(new Date().setDate(new Date().getDate() - 365))
+    const [dataDe, setDataDe] = useState<Date>(minDate)
+    const [dataAte, setDataAte] = useState<Date>(new Date())
 
     return (
         <Container>
             <h2>Vendas</h2>
             <div>
                 <TextInputContainer>
-                    <Date
+                    <DateSelector
                         selected={dataDe}
                         onChange={(date: Date) => setDataDe(date)}
                         dateFormat="dd/MM/yyyy"
                     />
                 </TextInputContainer>
                 <TextInputContainer>
-                    <Date
+                    <DateSelector
                         selected={dataAte}
                         onChange={(date: Date) => setDataAte(date)}
                         dateFormat="dd/MM/yyyy"

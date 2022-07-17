@@ -94,7 +94,7 @@ export const ShowColumn = styled.td`
     }
 `
 
-export const Date = styled(DatePicker)`
+export const DateSelector = styled(DatePicker)`
     border: 1px solid #384459;
     height: 46px;
     background-color: #1B2531;
