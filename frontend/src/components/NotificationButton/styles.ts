@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-const NotificationContainer = styled.div`
+const NotificationContainer = styled.button`
     height: 45px;
     width: 45px;
     background: rgba(255, 107, 114, 0.1);

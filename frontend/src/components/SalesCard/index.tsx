@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Container,
     TextInputContainer,
@@ -9,11 +9,33 @@ import {
 } from "./styles";
 
 import { NotificationButton } from "../NotificationButton";
+import { api } from "../../utils/api";
+import { Sale } from "../../models/sale";
 
 export function SalesCard() {
     const minDate = new Date(new Date().setDate(new Date().getDate() - 365))
     const [dataDe, setDataDe] = useState<Date>(minDate)
     const [dataAte, setDataAte] = useState<Date>(new Date())
+    const [sales, setSales] = useState<Sale[]>([])
+
+    async function getData() {
+        const min = dataDe.toISOString().split("T")[0];
+        const max = dataAte.toISOString().split("T")[0];
+
+        await api.get(`/sales?minDate=${min}&maxDate=${max}`)
+            .then((res) => {
+                setSales(res.data.content)
+            })
+    }
+
+    async function sendNotification(id:number) {
+        await api.get(`/sales/${id}/notification`)
+        .then((res) => console.log(res.data))
+    }
+
+    useEffect(() => {
+        getData()
+    }, [dataDe, dataAte])
 
     return (
         <Container>
@@ -48,45 +70,27 @@ export function SalesCard() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <ShowColumn>#341</ShowColumn>
-                            <td>08/07/2022</td>
-                            <td>Anakin</td>
-                            <ShowColumn>15</ShowColumn>
-                            <ShowColumn>11</ShowColumn>
-                            <td>R$ 55.300,00</td>
-                            <td>
-                                <div>
-                                    <NotificationButton />
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <ShowColumn>#342</ShowColumn>
-                            <td>08/07/2022</td>
-                            <td>Anakin</td>
-                            <ShowColumn>12</ShowColumn>
-                            <ShowColumn>09</ShowColumn>
-                            <td>R$ 55.300,00</td>
-                            <td>
-                                <div>
-                                    <NotificationButton />
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <ShowColumn>#343</ShowColumn>
-                            <td>08/07/2022</td>
-                            <td>Anakin</td>
-                            <ShowColumn>01</ShowColumn>
-                            <ShowColumn>03</ShowColumn>
-                            <td>R$ 55.300,00</td>
-                            <td>
-                                <div>
-                                    <NotificationButton />
-                                </div>
-                            </td>
-                        </tr>
+                        {
+                            sales.map(sale => {
+                                return (
+                                    <tr key={sale.id}>
+                                        <ShowColumn>{sale.id}</ShowColumn>
+                                        <td>{new Date(sale.date).toLocaleDateString()}</td>
+                                        <td>{sale.sellerName}</td>
+                                        <ShowColumn>{sale.visited}</ShowColumn>
+                                        <ShowColumn>{sale.deals}</ShowColumn>
+                                        <td>R$ {sale.amount}</td>
+                                        <td>
+                                            <div>
+                                                <NotificationButton
+                                                    onClick={() => sendNotification(sale.id)}
+                                                />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                        }
                     </tbody>
                 </SalesTable>
             </div>
