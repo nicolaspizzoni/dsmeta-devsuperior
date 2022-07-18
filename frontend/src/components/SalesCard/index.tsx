@@ -11,6 +11,7 @@ import {
 import { NotificationButton } from "../NotificationButton";
 import { api } from "../../utils/api";
 import { Sale } from "../../models/sale";
+import { toast } from "react-toastify";
 
 export function SalesCard() {
     const minDate = new Date(new Date().setDate(new Date().getDate() - 365))
@@ -30,7 +31,9 @@ export function SalesCard() {
 
     async function sendNotification(id:number) {
         await api.get(`/sales/${id}/notification`)
-        .then((res) => console.log(res.data))
+        .then((res) => {
+            toast.info("SMS enviado com sucesso!")
+        })
     }
 
     useEffect(() => {
@@ -79,7 +82,7 @@ export function SalesCard() {
                                         <td>{sale.sellerName}</td>
                                         <ShowColumn>{sale.visited}</ShowColumn>
                                         <ShowColumn>{sale.deals}</ShowColumn>
-                                        <td>R$ {sale.amount}</td>
+                                        <td>R$ {Number(sale.amount).toFixed(2)}</td>
                                         <td>
                                             <div>
                                                 <NotificationButton
