@@ -8,10 +8,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+//Entidade que define a tabela
 @Entity
 @Table (name = "tb_sales")
 public class Sale {
 	
+	//Id define o valor identificador e GenerateValue cuida de acrescentar valores diferentes ao id
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -24,6 +26,8 @@ public class Sale {
 	public Sale() {
 		
 	}
+	
+	//Metodos getters e setters
 
 	public Long getId() {
 		return id;
